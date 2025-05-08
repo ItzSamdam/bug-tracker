@@ -1,0 +1,378 @@
+<!-- views/layouts/main.ejs - Main layout template -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">Bug Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <% if (currentUser) { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/bugs/new">Report Bug</a>
+                        </li>
+                        <% if (isAdmin) { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">Admin Panel</a>
+                            </li>
+                            <% } %>
+                                <% } %>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <% if (currentUser) { %>
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, <%= currentUser.username %>
+                                    <%= isAdmin ? ' (Admin)' : '' %></span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Register</a>
+                            </li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Flash Messages -->
+        <% if (typeof success_msg !=='undefined' && success_msg.length> 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= success_msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+
+                <% if (typeof error_msg !=='undefined' && error_msg.length> 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <%= error_msg %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <% } %>
+
+                        <% if (typeof error !=='undefined' && error.length> 0) { %>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <%= error %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                            <% } %>
+
+                                <% if (typeof errors !=='undefined' && errors.length> 0) { %>
+                                    <% errors.forEach(function(error) { %>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <%= error.msg %>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <% }); %>
+                                            <% } %>
+
+                                                <%- body %>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">Bug Tracker &copy; <%= new Date().getFullYear() %></span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>
+
+<!-- views/index.ejs - Home page -->
+<%- include('layouts/main', { title: 'Home' }) %>
+
+    <div class="text-center py-5">
+        <h1 class="display-4">Welcome to Bug Tracker</h1>
+        <p class="lead">A simple application to track and manage software bugs</p>
+
+        <% if (!currentUser) { %>
+            <div class="mt-4">
+                <a href="/login" class="btn btn-primary me-2">Login</a>
+                <a href="/register" class="btn btn-outline-primary">Register</a>
+            </div>
+            <% } else { %>
+                <div class="mt-4">
+                    <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+                </div>
+                <% } %>
+    </div>
+
+    <!-- views/login.ejs - Login page -->
+    <%- include('layouts/main', { title: 'Login' }) %>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Login</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="/login" method="POST">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                        <div class="mt-3">
+                            <p>Don't have an account? <a href="/register">Register here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- views/register.ejs - Registration page -->
+        <%- include('layouts/main', { title: 'Register' }) %>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Register</h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="/register" method="POST">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" id="username" name="username" class="form-control"
+                                        value="<%= typeof username != 'undefined' ? username : '' %>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" required>
+                                    <div class="form-text">Password must be at least 6 characters</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password2" class="form-label">Confirm Password</label>
+                                    <input type="password" id="password2" name="password2" class="form-control"
+                                        required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                            <div class="mt-3">
+                                <p>Already have an account? <a href="/login">Login here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- views/dashboard.ejs - Dashboard page -->
+            <%- include('layouts/main', { title: 'Dashboard' }) %>
+
+                <h2 class="mb-4">Bug Dashboard</h2>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filter-status">Filter by Status:</label>
+                            <select class="form-select" id="filter-status">
+                                <option value="all">All</option>
+                                <option value="open">Open</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="search-input">Search:</label>
+                            <input type="text" class="form-control" id="search-input"
+                                placeholder="Search by description or page...">
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <a href="/bugs/new" class="btn btn-success w-100">Report New Bug</a>
+                    </div>
+                </div>
+
+                <div id="bugs-container" class="row">
+                    <% if (bugs.length===0) { %>
+                        <div class="col-12">
+                            <div class="alert alert-info">No bugs reported yet.</div>
+                        </div>
+                        <% } else { %>
+                            <% bugs.forEach(bug=> { %>
+                                <div class="col-md-6 col-lg-4 bug-card" data-status="<%= bug.status %>"
+                                    data-search="<%= bug.description.toLowerCase() %> <%= bug.page.toLowerCase() %>">
+                                    <div class="card mb-4">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <span>Bug #<%= bug._id.toString().substring(0, 6) %></span>
+                                            <span class="badge status-<%= bug.status %>">
+                                                <%= bug.status.replace('-', ' ' ).replace(/\b\w/g, l=> l.toUpperCase())
+                                                    %>
+                                            </span>
+                                        </div>
+                                        <img src="<%= bug.imageUrl %>" class="card-img-top bug-image"
+                                            alt="Bug screenshot">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <%= bug.page %>
+                                            </h5>
+                                            <p class="card-text">
+                                                <%= bug.description.length> 100 ? bug.description.substring(0, 100) +
+                                                    '...' : bug.description %>
+                                            </p>
+                                            <p class="card-text">
+                                                <small class="text-muted">
+                                                    Reported by: <%= bug.creator %> on <%= new
+                                                            Date(bug.createdAt).toLocaleString() %>
+                                                </small>
+                                            </p>
+                                            <a href="/bugs/<%= bug._id %>" class="btn btn-sm btn-outline-primary">View
+                                                Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                                    <% } %>
+                </div>
+
+                <!-- views/new_bug.ejs - Report bug page -->
+                <%- include('layouts/main', { title: 'Report Bug' }) %>
+
+                    <h2 class="mb-4">Report a Bug</h2>
+
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form action="/bugs" method="POST" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="page" class="form-label">Page/Location</label>
+                                            <input type="text" class="form-control" id="page" name="page" required>
+                                            <div class="form-text">Enter the page or feature where the bug occurs</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="description" name="description" rows="4"
+                                                required></textarea>
+                                            <div class="form-text">Provide a detailed description of the bug</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="image" class="form-label">Screenshot</label>
+                                            <input type="file" class="form-control" id="image" name="image"
+                                                accept="image/*">
+                                            <div class="form-text">Upload a screenshot of the bug (optional, max 5MB)
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-primary">Submit Bug Report</button>
+                                            <a href="/dashboard" class="btn btn-outline-secondary ms-2">Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- views/bug_detail.ejs - Bug detail page -->
+                    <%- include('layouts/main', { title: 'Bug Details' }) %>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Bug #<%= bug._id.toString().substring(0, 6) %>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="<%= bug.imageUrl %>" class="img-fluid mb-3 bug-detail-img"
+                                            alt="Bug screenshot">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>Details</h5>
+                                        <ul class="list-group list-group-flush mb-3">
+                                            <li class="list-group-item">
+                                                <strong>Status:</strong>
+                                                <span class="badge status-<%= bug.status %>">
+                                                    <%= bug.status.replace('-', ' ' ).replace(/\b\w/g, l=>
+                                                        l.toUpperCase()) %>
+                                                </span>
+                                            </li>
+                                            <li class="list-group-item"><strong>Page:</strong>
+                                                <%= bug.page %>
+                                            </li>
+                                            <li class="list-group-item"><strong>Reported by:</strong>
+                                                <%= bug.creator %>
+                                            </li>
+                                            <li class="list-group-item"><strong>Reported on:</strong>
+                                                <%= new Date(bug.createdAt).toLocaleString() %>
+                                            </li>
+                                            <li class="list-group-item"><strong>Last updated:</strong>
+                                                <%= new Date(bug.updatedAt).toLocaleString() %>
+                                            </li>
+                                        </ul>
+
+                                        <% if (isAdmin && bug.status !=='cancelled' ) { %>
+                                            <!-- Admin controls for updating status -->
+                                            <div class="card mb-3">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Update Status</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form action="/bugs/<%= bug._id %>/status?_method=PUT"
+                                                        method="POST">
+                                                        <div class="mb-3">
+                                                            <select name="status" class="form-select">
+                                                                <option value="open" <%=bug.status==='open' ? 'selected'
+                                                                    : '' %>>Open</option>
+                                                                <option value="in-progress"
+                                                                    <%=bug.status==='in-progress' ? 'selected' : '' %>
+                                                                    >In Progress</option>
+                                                                <option value="resolved" <%=bug.status==='resolved'
+                                                                    ? 'selected' : '' %>>Resolved</option>
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Update
+                                                            Status</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <% } %>
+
+                                                <% if (!isAdmin && currentUser && bug.creator===currentUser.username &&
+                                                    bug.status !=='cancelled' ) { %>
+                                                    <!-- Creator can cancel bug -->
+                                                    <form action="/bugs/<%= bug._id %>/status?_method=PUT"
+                                                        method="POST">
+                                                        <input type="hidden" name="status" value="cancelled">
+                                                        <button type="submit" class="btn btn-outline-secondary">Cancel
+                                                            Bug Report</button>
+                                                    </form>
+                                                    <% } %>
+                                    </div>
