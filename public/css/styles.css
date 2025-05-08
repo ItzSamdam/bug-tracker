@@ -1,0 +1,68 @@
+/* public/css/styles.css */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.bug-card {
+    transition: transform 0.3s;
+}
+
+.bug-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    font-weight: 500;
+}
+
+.bug-image {
+    height: 200px;
+    object-fit: cover;
+    background-color: #f1f1f1;
+}
+
+.bug-detail-img {
+    max-height: 400px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.status-open {
+    background-color: #dc3545;
+}
+
+.status-in-progress {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-resolved {
+    background-color: #28a745;
+}
+
+.status-cancelled {
+    background-color: #6c757d;
+}
+
+.footer {
+    margin-top: auto;
+    padding: 1rem 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+
+/* public/images/placeholder.png - Just a note that this file needs to be created or downloaded */
