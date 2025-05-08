@@ -1,8 +1,8 @@
 // seeds.js - Seed database with initial data
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Bug = require('./models/Bug');
+const User = require('./src/models/User');
+const Bug = require('./src/models/Bug');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/bug_tracker', {
