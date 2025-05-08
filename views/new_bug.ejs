@@ -1,0 +1,36 @@
+<!-- views/new_bug.ejs - Report bug page -->
+<%- include('layouts/main', { title: 'Report Bug' }) %>
+
+    <h2 class="mb-4">Report a Bug</h2>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/bugs" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="page" class="form-label">Page/Location</label>
+                            <input type="text" class="form-control" id="page" name="page" required>
+                            <div class="form-text">Enter the page or feature where the bug occurs</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"
+                                required></textarea>
+                            <div class="form-text">Provide a detailed description of the bug</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Screenshot</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <div class="form-text">Upload a screenshot of the bug (optional, max 5MB)
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Submit Bug Report</button>
+                            <a href="/dashboard" class="btn btn-outline-secondary ms-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

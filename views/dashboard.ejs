@@ -1,0 +1,70 @@
+<!-- views/dashboard.ejs - Dashboard page -->
+<%- include('layouts/main', { title: 'Dashboard' }) %>
+
+    <h2 class="mb-4">Bug Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="filter-status">Filter by Status:</label>
+                <select class="form-select" id="filter-status">
+                    <option value="all">All</option>
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="search-input">Search:</label>
+                <input type="text" class="form-control" id="search-input"
+                    placeholder="Search by description or page...">
+            </div>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <a href="/bugs/new" class="btn btn-success w-100">Report New Bug</a>
+        </div>
+    </div>
+
+    <div id="bugs-container" class="row">
+        <% if (bugs.length===0) { %>
+            <div class="col-12">
+                <div class="alert alert-info">No bugs reported yet.</div>
+            </div>
+            <% } else { %>
+                <% bugs.forEach(bug=> { %>
+                    <div class="col-md-6 col-lg-4 bug-card" data-status="<%= bug.status %>"
+                        data-search="<%= bug.description.toLowerCase() %> <%= bug.page.toLowerCase() %>">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Bug #<%= bug._id.toString().substring(0, 6) %></span>
+                                <span class="badge status-<%= bug.status %>">
+                                    <%= bug.status.replace('-', ' ' ).replace(/\b\w/g, l=> l.toUpperCase())
+                                        %>
+                                </span>
+                            </div>
+                            <img src="<%= bug.imageUrl %>" class="card-img-top bug-image" alt="Bug screenshot">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= bug.page %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= bug.description.length> 100 ? bug.description.substring(0, 100) +
+                                        '...' : bug.description %>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        Reported by: <%= bug.creator %> on <%= new Date(bug.createdAt).toLocaleString()
+                                                %>
+                                    </small>
+                                </p>
+                                <a href="/bugs/<%= bug._id %>" class="btn btn-sm btn-outline-primary">View
+                                    Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } %>
+    </div>
