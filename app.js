@@ -49,8 +49,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Load models
-const User = require('./models/User');
-const Bug = require('./models/Bug');
+const User = require('./src/models/User');
+const Bug = require('./src/models/Bug');
 
 // Configure Passport Local Strategy
 passport.use(new LocalStrategy(
